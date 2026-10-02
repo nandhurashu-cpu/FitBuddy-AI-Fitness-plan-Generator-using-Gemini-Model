@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block title %}FitBuddy | Admin{% endblock %}
+
+{% block content %}
+<section class="card">
+    <span class="eyebrow">ADMIN / COACH VIEW</span>
+    <h1>All Users & Plans</h1>
+    <p class="muted">Local demonstration dashboard for stored FitBuddy records.</p>
+</section>
+
+{% if rows %}
+    {% for user, plan in rows %}
+    <article class="card user-card">
+        <div class="user-header">
+            <div>
+                <h2>{{ user.username }}</h2>
+                <p>ID: {{ user.user_id }} · Age: {{ user.age }} · Weight: {{ user.weight }} kg</p>
+                <p>Goal: {{ user.goal }} · Intensity: {{ user.intensity|title }}</p>
+            </div>
+            <form action="/delete-user/{{ user.user_id }}" method="post" onsubmit="return confirm('Delete this user and their plans?');">
+                <button class="btn danger" type="submit">Delete</button>
+            </form>
+        </div>
+
+        {% if plan %}
+        <h3>Original Plan</h3>
+        <pre class="plan compact">{{ plan.original_plan }}</pre>
+
+        {% if plan.updated_plan %}
+        <h3>Updated Plan</h3>
+        <pre class="plan compact">{{ plan.updated_plan }}</pre>
+        <p><strong>Feedback:</strong> {{ plan.feedback }}</p>
+        {% endif %}
+        {% endif %}
+    </article>
+    {% endfor %}
+{% else %}
+    <div class="card empty">
+        <p>No users yet. Generate a plan from the home page.</p>
+    </div>
+{% endif %}
+{% endblock %}
